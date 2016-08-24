@@ -1,6 +1,6 @@
 {
   "name": "bristol-hipchat",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Bristol logging HipChat integration.",
   "author": "Steven Berry <steven@sberry.me> (http://www.sberry.me/)",
   "license": "MIT",
@@ -10,7 +10,8 @@
   },
   "main": "main",
   "dependencies": {
+    "clone": "^1.0.2",
     "escape-html": "^1.0.3",
-    "node-hipchat": "^0.4.5"
+    "hipchatter": "^0.3.1"
   }
 }

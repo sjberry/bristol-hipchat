@@ -1,4 +1,5 @@
-var HipChat = require('node-hipchat');
+var Hipchatter = require('hipchatter');
+var clone = require('clone');
 var escape = require('escape-html');
 
 
@@ -18,12 +19,20 @@ var escape = require('escape-html');
  * @returns {Function} A target log function that can be registered with Bristol via `.addTarget()`.
  */
 function Target(options) {
-	var key, client;
+	var key, client, room;
 
-	options = options || {};
-	client = new HipChat(options.token);
+	if (options) {
+		options = clone(options);
+	}
+	else {
+		options = {};
+	}
+
+	client = new Hipchatter(options.token);
+	room = options.room;
 
 	delete options.token;
+	delete options.room;
 
 	function Message(message) {
 		if (this.message_format === 'html') {
@@ -51,7 +60,7 @@ function Target(options) {
 	}
 
 	return function(options, severity, date, message) {
-		client.postMessage(new Message(message));
+		client.notify(room, new Message(message));
 	};
 }
 
