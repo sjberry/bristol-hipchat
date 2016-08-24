@@ -19,7 +19,7 @@ var escape = require('escape-html');
  * @returns {Function} A target log function that can be registered with Bristol via `.addTarget()`.
  */
 function Target(options) {
-	var key, client, room;
+	var key, client, proto, room;
 
 	if (options) {
 		options = clone(options);
@@ -34,21 +34,9 @@ function Target(options) {
 	delete options.token;
 	delete options.room;
 
-	function Message(message) {
-		if (this.message_format === 'html') {
-			this.message = escape(message)
-				.replace(/\n/g, '<br/>')
-				.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
-		}
-		else {
-			this.message = message;
-		}
-	}
-
-	Message.prototype = {
+	proto = {
 		message_format: 'html',
-		notify: false,
-		color: 'yellow'
+		notify: false
 	};
 
 	for (key in options) {
@@ -56,11 +44,44 @@ function Target(options) {
 			break;
 		}
 
-		Message.prototype[key] = options[key];
+		proto[key] = options[key];
 	}
 
 	return function(options, severity, date, message) {
-		client.notify(room, new Message(message));
+		var payload;
+
+		payload = clone(proto);
+
+		if (typeof payload.color !== 'string') {
+			switch(severity) {
+				case 'info':
+					payload.color = 'green';
+					break;
+
+				case 'warn':
+					payload.color = 'yellow';
+					break;
+
+				case 'error':
+					payload.color = 'red';
+					break;
+
+				default:
+					payload.color = 'gray';
+					break;
+			}
+		}
+
+		if (proto.message_format === 'html') {
+			payload.message = escape(message)
+				.replace(/\n/g, '<br/>')
+				.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+		}
+		else {
+			payload.message = message;
+		}
+
+		client.notify(room, payload);
 	};
 }
 
