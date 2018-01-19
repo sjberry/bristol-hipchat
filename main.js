@@ -1,6 +1,8 @@
-var Hipchatter = require('hipchatter');
-var clone = require('clone');
-var escape = require('escape-html');
+'use strict';
+
+const Hipchatter = require('hipchatter');
+const clone = require('clone');
+const escape = require('escape-html');
 
 
 /**
@@ -18,28 +20,21 @@ var escape = require('escape-html');
  *     will not override the users' notification preferences for the target room.
  * @returns {Function} A target log function that can be registered with Bristol via `.addTarget()`.
  */
-function Target(options) {
-	var key, client, proto, room;
+function Target(options = {}) {
+	options = clone(options);
 
-	if (options) {
-		options = clone(options);
-	}
-	else {
-		options = {};
-	}
-
-	client = new Hipchatter(options.token);
-	room = options.room;
+	let client = new Hipchatter(options.token);
+	let room = options.room;
 
 	delete options.token;
 	delete options.room;
 
-	proto = {
+	let proto = {
 		message_format: 'html',
 		notify: false
 	};
 
-	for (key in options) {
+	for (let key in options) {
 		if (!options.hasOwnProperty(key)) {
 			break;
 		}
@@ -48,9 +43,7 @@ function Target(options) {
 	}
 
 	return function(options, severity, date, message) {
-		var payload;
-
-		payload = clone(proto);
+		let payload = clone(proto);
 
 		if (typeof payload.color !== 'string') {
 			switch(severity) {
@@ -81,7 +74,11 @@ function Target(options) {
 			payload.message = message;
 		}
 
-		client.notify(room, payload);
+		client.notify(room, payload, function(err) {
+			if (err) {
+				console.log(err);
+			}
+		});
 	};
 }
 

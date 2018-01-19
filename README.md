@@ -1,8 +1,9 @@
 ## bristol-hipchat
 
+**NOTE: Atlassian has deprecated HipChat in favor of Stride. This library is no longer actively maintained accordingly. Some final formatting changes and a bugfix have been added to the most recent version, but it is no longer possible for me to test them.**
+
 A plugin formatter for [Bristol](https://github.com/TomFrost/Bristol) that supports sending
 notifications to [Atlassian HipChat](hipchat.com).
-
 
 #### Installation
 
@@ -12,11 +13,11 @@ notifications to [Atlassian HipChat](hipchat.com).
 #### Example
 
 ```javascript
-var Bristol = require('bristol').Bristol();
-var BristolHipChat = require('bristol-hipchat');
+const Bristol = require('bristol').Bristol();
+const BristolHipChat = require('bristol-hipchat');
 
 
-var logger = new Bristol();
+let logger = new Bristol();
 
 logger.addTarget(new BristolHipChat({
     token: 'xxxxxx',

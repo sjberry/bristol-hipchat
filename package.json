@@ -1,6 +1,6 @@
 {
   "name": "bristol-hipchat",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Bristol logging HipChat integration.",
   "author": "Steven Berry <steven@sberry.me> (http://www.sberry.me/)",
   "license": "MIT",
